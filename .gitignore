@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+catboost_info/
+.ipynb_checkpoints/
+*.lnk
+.agents/
+.DS_Store

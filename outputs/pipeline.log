@@ -1,0 +1,1199 @@
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-06-13 15:35:10 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:35:10 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 15:35:10 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:35:28 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 15:35:28 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 15:35:28 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 15:35:28 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 15:35:28 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 15:35:28 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 15:35:28 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 15:35:28 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 2/7 : Feature Engineering
+2026-06-13 15:35:28 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:35:28 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 15:35:28 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:35:28 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 15:35:33 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 15:35:33 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 15:35:33 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 15:35:33 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 15:35:36 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 15:35:56 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 15:36:03 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 15:36:05 | ERROR    | FraudDetection            | Erreur fatale dans le pipeline : '>' not supported between instances of 'str' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\groupby.py", line 1826, in apply
+    result = self._python_apply_general(f, self._selected_obj)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\groupby.py", line 1887, in _python_apply_general
+    values, mutated = self._grouper.apply_groupwise(f, data, self.axis)
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\ops.py", line 928, in apply_groupwise
+    res = f(group)
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 528, in <lambda>
+    lambda x: int((x > 0).any())
+                   ^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\common.py", line 76, in new_method
+    return method(self, other)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\arraylike.py", line 56, in __gt__
+    return self._cmp_method(other, operator.gt)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\series.py", line 6138, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\array_ops.py", line 344, in comparison_op
+    res_values = comp_method_OBJECT_ARRAY(op, lvalues, rvalues)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\array_ops.py", line 129, in comp_method_OBJECT_ARRAY
+    result = libops.scalar_compare(x.ravel(), y, op)
+  File "pandas/_libs/ops.pyx", line 107, in pandas._libs.ops.scalar_compare
+TypeError: '>' not supported between instances of 'str' and 'int'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 191, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 79, in main
+    df_features = engineer.build_features(client_train, invoice_train)
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 581, in build_features
+    counter_feats = self._build_counter_features(invoices_clean)
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 527, in _build_counter_features
+    anomaly = invoices.groupby("client_id")["counter_statue"].apply(
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        lambda x: int((x > 0).any())
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).rename("has_counter_anomaly").reset_index()
+    ^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\generic.py", line 230, in apply
+    return super().apply(func, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\groupby.py", line 1848, in apply
+    return self._python_apply_general(f, self._obj_with_exclusions)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\groupby.py", line 1887, in _python_apply_general
+    values, mutated = self._grouper.apply_groupwise(f, data, self.axis)
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\groupby\ops.py", line 928, in apply_groupwise
+    res = f(group)
+  File "C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 528, in <lambda>
+    lambda x: int((x > 0).any())
+                   ^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\common.py", line 76, in new_method
+    return method(self, other)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\arraylike.py", line 56, in __gt__
+    return self._cmp_method(other, operator.gt)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\series.py", line 6138, in _cmp_method
+    res_values = ops.comparison_op(lvalues, rvalues, op)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\array_ops.py", line 344, in comparison_op
+    res_values = comp_method_OBJECT_ARRAY(op, lvalues, rvalues)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\core\ops\array_ops.py", line 129, in comp_method_OBJECT_ARRAY
+    result = libops.scalar_compare(x.ravel(), y, op)
+  File "pandas/_libs/ops.pyx", line 107, in pandas._libs.ops.scalar_compare
+TypeError: '>' not supported between instances of 'str' and 'int'
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-06-13 15:36:49 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:36:49 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 15:36:49 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:37:09 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 15:37:09 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 15:37:09 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 15:37:09 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 15:37:09 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 15:37:09 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 15:37:09 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 15:37:09 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 2/7 : Feature Engineering
+2026-06-13 15:37:09 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:37:09 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 15:37:09 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:37:09 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 15:37:13 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 15:37:13 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 15:37:13 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 15:37:13 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 15:37:16 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 15:37:35 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 15:37:40 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 15:38:32 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 3/7 : Analyse du déséquilibre
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ============================================================
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ============================================================
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-06-13 15:38:32 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 4/7 : Split stratifié train/test
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Train : 108,394 (80%)
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Test  : 27,099 (20%)
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Distribution train : {0: np.int64(102341), 1: np.int64(6053)}
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Distribution test  : {0: np.int64(25586), 1: np.int64(1513)}
+2026-06-13 15:38:32 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 5/7 : Validation croisée stratifiée
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:38:32 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Folds    : 5
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:38:32 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:38:32 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-06-13 15:38:32 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:38:51 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-06-13 15:39:00 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-06-13 15:39:09 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-06-13 15:39:17 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-06-13 15:39:26 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-06-13 15:39:26 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-06-13 15:39:26 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:39:26 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-06-13 15:39:26 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:39:36 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-06-13 15:39:48 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-06-13 15:40:02 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-06-13 15:40:16 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-06-13 15:40:27 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-06-13 15:40:27 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-06-13 15:40:27 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:40:27 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-06-13 15:40:27 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:41:09 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-06-13 15:41:44 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-06-13 15:42:10 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-06-13 15:42:37 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-06-13 15:43:14 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-06-13 15:43:14 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-06-13 15:43:14 | INFO     | FraudDetection            | 
+  Résumé de la validation croisée :
+2026-06-13 15:43:14 | INFO     | FraudDetection            | 
+  Modèle         ROC-AUC          PR-AUC        F1-Score ★
+ XGBoost 0.8441 ± 0.0049 0.2971 ± 0.0091 0.3200 ± 0.0073  
+LightGBM 0.8463 ± 0.0048 0.3001 ± 0.0091 0.3015 ± 0.0033  
+CatBoost 0.8487 ± 0.0048 0.2966 ± 0.0062 0.2867 ± 0.0034  
+2026-06-13 15:43:14 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 6/7 : Entraînement du meilleur modèle
+2026-06-13 15:43:14 | INFO     | FraudDetection            | 
+======================================================================
+2026-06-13 15:43:14 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-06-13 15:43:14 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-06-13 15:43:14 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:44:12 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-06-13 15:44:12 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 7/7 : Évaluation & Explicabilité
+2026-06-13 15:44:13 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:44:13 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-13 15:44:13 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:44:13 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-13 15:44:13 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-13 15:44:13 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-13 15:44:13 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-13 15:44:13 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-13 15:44:13 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 15:44:13 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-13 15:44:15 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-13 15:44:16 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-13 15:44:17 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-13 15:44:18 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 15:44:18 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-13 15:44:18 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-13 15:44:18 | INFO     | FraudDetection            | 
+  💾 Modèle sauvegardé → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\models\best_model_lightgbm.joblib
+2026-06-13 15:44:18 | INFO     | FraudDetection            | 
+══════════════════════════════════════════════════════════════════════
+2026-06-13 15:44:18 | INFO     | FraudDetection            | RÉSUMÉ FINAL DU PIPELINE
+2026-06-13 15:44:18 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   Meilleur modèle   : LightGBM
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   ROC-AUC (test)    : 0.8548
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   PR-AUC  (test)    : 0.3145
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   F1-Score (test)   : 0.3060
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   Accuracy (test)   : 0.8187
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   Temps total       : 448.9s (7.5 min)
+2026-06-13 15:44:18 | INFO     | FraudDetection            |   Sorties           : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs
+2026-06-13 15:44:18 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-06-13 15:44:18 | INFO     | FraudDetection            | Pipeline terminé avec succès ✓
+2026-06-13 15:50:14 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:50:14 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 15:50:14 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:50:32 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 15:50:32 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 15:50:32 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 15:50:32 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 15:50:32 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 15:50:32 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 15:50:32 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 15:50:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:50:35 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 15:50:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 15:50:35 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 15:50:47 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 15:50:48 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 15:50:48 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 15:50:48 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 15:50:55 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 15:51:30 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 15:51:37 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 15:52:51 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 15:52:51 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ============================================================
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ============================================================
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:52:52 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   Folds    : 5
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 15:52:52 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:52:52 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-06-13 15:52:52 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:53:10 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-06-13 15:53:27 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-06-13 15:53:43 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-06-13 15:54:01 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-06-13 15:54:28 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-06-13 15:54:28 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-06-13 15:54:28 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:54:28 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-06-13 15:54:28 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:54:47 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-06-13 15:55:03 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-06-13 15:55:17 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-06-13 15:55:27 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-06-13 15:55:37 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-06-13 15:55:37 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-06-13 15:55:37 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 15:55:37 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-06-13 15:55:37 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 15:56:11 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-06-13 15:57:03 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-06-13 15:57:36 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-06-13 15:58:10 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-06-13 15:59:04 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-06-13 15:59:04 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-06-13 15:59:05 | INFO     | FraudDetection            | 
+======================================================================
+2026-06-13 15:59:05 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-06-13 15:59:05 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-06-13 15:59:05 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:00:26 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-06-13 16:00:27 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-13 16:00:28 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-13 16:00:29 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-13 16:00:30 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-13 16:21:29 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:21:29 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 16:21:29 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:21:55 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 16:21:55 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 16:21:55 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 16:21:55 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 16:21:55 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 16:21:55 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 16:21:55 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 16:22:00 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:22:00 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 16:22:00 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:22:00 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 16:22:07 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 16:22:07 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 16:22:07 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 16:22:07 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 16:22:14 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 16:23:01 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 16:23:16 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 16:24:24 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 16:24:24 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-06-13 16:30:16 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:30:16 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 16:30:16 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:30:35 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 16:30:35 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 16:30:35 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 16:30:35 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 16:30:35 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 16:30:35 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 16:30:35 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 16:30:35 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 2/7 : Feature Engineering
+2026-06-13 16:30:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:30:35 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 16:30:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:30:35 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 16:30:40 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 16:30:40 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 16:30:40 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 16:30:41 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 16:30:45 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 16:31:21 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 16:31:28 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:31:28 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-13 16:31:28 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:31:41 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 16:32:18 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-13 16:32:18 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-13 16:32:18 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-13 16:32:18 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-13 16:32:18 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-13 16:32:18 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-13 16:32:18 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-13 16:32:37 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:32:37 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-13 16:32:37 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-13 16:32:37 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-13 16:32:52 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-13 16:32:52 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-13 16:32:52 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-13 16:32:52 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-13 16:33:00 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-13 16:34:10 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 16:34:13 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 3/7 : Analyse du déséquilibre
+2026-06-13 16:34:13 | INFO     | FraudDetection            | ============================================================
+2026-06-13 16:34:13 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-06-13 16:34:13 | INFO     | FraudDetection            | ============================================================
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-06-13 16:34:13 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-06-13 16:34:13 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 4/7 : Split stratifié train/test
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Train : 108,394 (80%)
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Test  : 27,099 (20%)
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Distribution train : {0: np.int64(102341), 1: np.int64(6053)}
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Distribution test  : {0: np.int64(25586), 1: np.int64(1513)}
+2026-06-13 16:34:14 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 5/7 : Validation croisée stratifiée
+2026-06-13 16:34:14 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:34:14 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Folds    : 5
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-06-13 16:34:14 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:34:14 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:34:14 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-06-13 16:34:14 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:34:19 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-13 16:34:31 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-06-13 16:34:48 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-06-13 16:35:08 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-06-13 16:35:25 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-06-13 16:36:04 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-13 16:36:04 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-13 16:36:05 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-06-13 16:36:05 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-06-13 16:36:05 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:36:05 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-06-13 16:36:05 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:36:19 | INFO     | FraudDetection            | ============================================================
+2026-06-13 16:36:19 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-06-13 16:36:19 | INFO     | FraudDetection            | ============================================================
+2026-06-13 16:36:19 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-06-13 16:36:19 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-06-13 16:36:19 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-06-13 16:36:20 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:36:20 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-06-13 16:36:20 | INFO     | FraudDetection            |   Folds    : 5
+2026-06-13 16:36:20 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-06-13 16:36:20 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:36:20 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:36:20 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-06-13 16:36:20 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:36:25 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-06-13 16:36:36 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-06-13 16:36:47 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-06-13 16:36:52 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-06-13 16:37:28 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-06-13 16:37:53 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-06-13 16:38:01 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-06-13 16:38:38 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-06-13 16:38:38 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-06-13 16:38:38 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:38:38 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-06-13 16:38:38 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:38:47 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-06-13 16:39:01 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-06-13 16:39:15 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-06-13 16:39:15 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-06-13 16:39:15 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:39:15 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-06-13 16:39:15 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:39:56 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-06-13 16:40:08 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-06-13 16:40:51 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-06-13 16:41:01 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-06-13 16:41:26 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-06-13 16:41:51 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-06-13 16:42:00 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-06-13 16:42:29 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-06-13 16:42:29 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-06-13 16:42:29 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-13 16:42:29 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-06-13 16:42:29 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-13 16:42:33 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-06-13 16:42:33 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-06-13 16:42:33 | INFO     | FraudDetection            | 
+  Résumé de la validation croisée :
+2026-06-13 16:42:33 | INFO     | FraudDetection            | 
+  Modèle         ROC-AUC          PR-AUC        F1-Score ★
+ XGBoost 0.8441 ± 0.0049 0.2971 ± 0.0091 0.3200 ± 0.0073  
+LightGBM 0.8463 ± 0.0048 0.3001 ± 0.0091 0.3015 ± 0.0033  
+CatBoost 0.8487 ± 0.0048 0.2966 ± 0.0062 0.2867 ± 0.0034  
+2026-06-13 16:42:33 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 6/7 : Entraînement du meilleur modèle
+2026-06-13 16:42:33 | INFO     | FraudDetection            | 
+======================================================================
+2026-06-13 16:42:33 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-06-13 16:42:33 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-06-13 16:42:33 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:43:11 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-06-13 16:44:04 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-06-13 16:45:18 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-06-13 16:45:58 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-06-13 16:45:58 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 7/7 : Évaluation & Explicabilité
+2026-06-13 16:45:59 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:45:59 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-13 16:45:59 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:45:59 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-13 16:45:59 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-13 16:45:59 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-13 16:45:59 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-13 16:45:59 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-13 16:45:59 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 16:45:59 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-13 16:46:01 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-13 16:46:03 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-13 16:46:04 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-13 16:46:06 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 16:46:06 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-13 16:46:06 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-13 16:46:06 | INFO     | FraudDetection            | 
+  💾 Modèle sauvegardé → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\models\best_model_lightgbm.joblib
+2026-06-13 16:46:06 | INFO     | FraudDetection            | 
+══════════════════════════════════════════════════════════════════════
+2026-06-13 16:46:06 | INFO     | FraudDetection            | RÉSUMÉ FINAL DU PIPELINE
+2026-06-13 16:46:06 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   Meilleur modèle   : LightGBM
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   ROC-AUC (test)    : 0.8548
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   PR-AUC  (test)    : 0.3145
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   F1-Score (test)   : 0.3060
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   Accuracy (test)   : 0.8187
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   Temps total       : 949.8s (15.8 min)
+2026-06-13 16:46:06 | INFO     | FraudDetection            |   Sorties           : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs
+2026-06-13 16:46:06 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-06-13 16:46:06 | INFO     | FraudDetection            | Pipeline terminé avec succès ✓
+2026-06-13 16:46:14 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-06-13 16:47:01 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-06-13 16:47:01 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-06-13 16:47:05 | INFO     | FraudDetection            | 
+======================================================================
+2026-06-13 16:47:05 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-06-13 16:47:05 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-06-13 16:47:05 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:48:22 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-06-13 16:48:23 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:48:23 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-13 16:48:23 | INFO     | FraudDetection            | ======================================================================
+2026-06-13 16:48:23 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-13 16:48:23 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-13 16:48:23 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-13 16:48:23 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-13 16:48:23 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-13 16:48:23 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 16:48:23 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-13 16:48:24 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-13 16:48:25 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-13 16:48:25 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-13 16:48:26 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-13 16:48:26 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-13 16:48:26 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-13 16:48:26 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-14 17:12:25 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 17:12:37 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 17:12:37 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:12:37 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 17:12:37 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:13:36 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 17:13:38 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 17:13:38 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:13:38 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 17:13:38 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:14:01 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 17:14:01 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 17:14:01 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 17:14:01 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 17:14:01 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 17:14:01 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 17:14:01 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 17:14:01 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:14:01 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 17:14:01 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:14:01 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 17:14:05 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 17:14:06 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 17:14:06 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 17:14:06 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 17:14:11 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 17:14:47 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 17:14:55 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 17:15:54 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 17:15:54 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 17:15:56 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 17:20:43 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 17:20:47 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 17:20:47 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:20:47 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 17:20:47 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:21:09 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 17:21:09 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 17:21:09 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 17:21:09 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 17:21:09 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 17:21:09 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 17:21:09 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 17:21:09 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:21:09 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 17:21:09 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:21:09 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 17:21:15 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 17:21:15 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 17:21:15 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 17:21:16 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 17:21:21 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 17:21:51 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 17:21:58 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 17:23:00 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 17:23:00 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 17:23:01 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 17:33:32 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 17:33:36 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 17:33:36 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:33:36 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 17:33:36 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:33:56 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 17:33:56 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 17:33:56 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 17:33:56 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 17:33:56 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 17:33:56 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 17:33:56 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 17:33:56 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:33:56 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 17:33:56 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:33:56 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 17:34:00 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 17:34:01 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 17:34:01 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 17:34:01 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 17:34:07 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 17:35:07 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 17:35:26 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 17:36:25 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 17:36:25 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 17:36:27 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 17:52:30 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 17:52:34 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 17:52:34 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:52:34 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 17:52:34 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 17:53:12 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 17:53:12 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 17:53:12 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 17:53:12 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 17:53:12 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 17:53:12 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 17:53:12 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 17:53:12 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:53:12 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 17:53:12 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 17:53:12 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 17:53:33 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 17:53:33 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 17:53:33 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 17:53:33 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 17:53:38 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 17:54:17 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 17:54:22 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 17:54:59 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 17:54:59 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 17:55:00 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 20:42:47 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 20:42:53 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 20:42:53 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 20:42:53 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 20:42:53 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 20:43:13 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 20:43:13 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 20:43:13 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 20:43:13 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 20:43:13 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 20:43:13 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 20:43:13 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 20:43:13 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 20:43:13 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 20:43:13 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 20:43:13 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 20:43:18 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 20:43:18 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 20:43:18 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 20:43:18 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 20:43:22 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 20:43:53 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 20:43:59 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 20:45:22 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 20:45:22 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 20:45:27 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 20:45:27 | INFO     | FraudDetection            |   [OK] Test set : 27099 clients pour les metriques
+2026-06-14 20:46:05 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-14 20:46:09 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-14 20:46:09 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 20:46:09 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 20:46:09 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 20:46:35 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 20:46:35 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 20:46:35 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 20:46:35 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 20:46:35 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 20:46:35 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 20:46:35 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 20:46:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 20:46:35 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 20:46:35 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 20:46:35 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 20:46:43 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 20:46:44 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 20:46:44 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 20:46:44 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 20:46:50 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 20:47:17 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 20:47:23 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 20:48:22 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 20:48:22 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 20:48:24 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-14 20:48:24 | INFO     | FraudDetection            |   [OK] Test set : 27099 clients pour les metriques
+2026-06-14 21:20:34 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:20:34 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-14 21:20:34 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:20:53 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-14 21:20:53 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-14 21:20:53 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-14 21:20:53 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-14 21:20:53 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-14 21:20:53 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-14 21:20:53 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-14 21:21:03 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 21:21:03 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-14 21:21:03 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-14 21:21:03 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-14 21:21:10 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-14 21:21:10 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-14 21:21:10 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-14 21:21:11 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-14 21:21:15 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-14 21:21:40 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-14 21:21:46 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-14 21:22:32 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-14 21:22:32 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ============================================================
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ============================================================
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:22:43 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   Folds    : 5
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:22:43 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-14 21:22:43 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-06-14 21:22:43 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-14 21:22:59 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-06-14 21:23:11 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-06-14 21:23:26 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-06-14 21:23:40 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-06-14 21:23:52 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-06-14 21:23:52 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-06-14 21:23:52 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-14 21:23:52 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-06-14 21:23:52 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-14 21:24:04 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-06-14 21:24:17 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-06-14 21:24:27 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-06-14 21:24:38 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-06-14 21:24:48 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-06-14 21:24:48 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-06-14 21:24:48 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-06-14 21:24:48 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-06-14 21:24:48 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-06-14 21:25:24 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-06-14 21:25:55 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-06-14 21:26:29 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-06-14 21:26:54 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-06-14 21:27:16 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-06-14 21:27:16 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-06-14 21:27:19 | INFO     | FraudDetection            | 
+======================================================================
+2026-06-14 21:27:19 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-06-14 21:27:19 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-06-14 21:27:19 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:28:20 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-06-14 21:28:21 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:28:21 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-14 21:28:21 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:28:21 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-14 21:28:21 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-14 21:28:21 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-14 21:28:21 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-14 21:28:21 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-14 21:28:21 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:28:21 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-14 21:28:21 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-14 21:28:22 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-14 21:28:23 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-14 21:28:24 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-14 21:28:24 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:28:24 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-14 21:28:24 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-14 21:29:41 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:29:41 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-14 21:29:41 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:29:41 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-14 21:29:41 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-14 21:29:41 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-14 21:29:41 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-14 21:29:41 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-14 21:29:41 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:29:41 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-14 21:29:41 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-14 21:29:42 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-14 21:29:43 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-14 21:29:44 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-14 21:29:44 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:29:44 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-14 21:29:44 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-14 21:36:32 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:36:32 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-14 21:36:32 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:36:32 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-14 21:36:32 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-14 21:36:32 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-14 21:36:32 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-14 21:36:32 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-14 21:36:32 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:36:32 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-14 21:36:33 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-14 21:36:33 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-14 21:36:34 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-14 21:36:36 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-14 21:36:36 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:36:36 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-14 21:36:36 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-14 21:42:45 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:42:45 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-06-14 21:42:45 | INFO     | FraudDetection            | ======================================================================
+2026-06-14 21:42:45 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-06-14 21:42:45 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-06-14 21:42:45 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-06-14 21:42:45 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-06-14 21:42:45 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-06-14 21:42:45 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:42:45 | INFO     | FraudDetection            | Génération des graphiques...
+2026-06-14 21:42:46 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-06-14 21:42:46 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-06-14 21:42:47 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-06-14 21:42:48 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-06-14 21:42:48 | INFO     | FraudDetection            | ----------------------------------------
+2026-06-14 21:42:48 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-06-14 21:42:48 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-06-15 08:47:50 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-06-15 08:48:19 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-06-15 08:48:19 | INFO     | FraudDetection            | ======================================================================
+2026-06-15 08:48:19 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-06-15 08:48:19 | INFO     | FraudDetection            | ======================================================================
+2026-06-15 08:48:56 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-06-15 08:48:56 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-06-15 08:48:56 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-06-15 08:48:56 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-06-15 08:48:56 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-06-15 08:48:56 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-06-15 08:48:56 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-06-15 08:48:56 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-15 08:48:56 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-06-15 08:48:56 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-06-15 08:48:56 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-06-15 08:49:11 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-06-15 08:49:11 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-06-15 08:49:11 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-06-15 08:49:11 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-06-15 08:49:23 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-06-15 08:50:25 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-06-15 08:50:37 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-06-15 08:52:15 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-06-15 08:52:15 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-06-15 08:52:17 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-06-15 08:52:17 | INFO     | FraudDetection            |   [OK] Test set : 27099 clients pour les metriques
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-07-07 23:37:26 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:37:26 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-07-07 23:37:26 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:37:26 | ERROR    | FraudDetection            | Erreur fatale dans le pipeline : [Errno 2] No such file or directory: 'C:\\Users\\itomo\\OneDrive\\Documents\\code\\python\\Projet\\detection_de_fraude\\data\\client_train.csv'
+Traceback (most recent call last):
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 191, in <module>
+    main()
+    ~~~~^^
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 71, in main
+    client_train, client_test, invoice_train, invoice_test = loader.load_all()
+                                                             ~~~~~~~~~~~~~~~^^
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 68, in load_all
+    self.client_train = pd.read_csv(CLIENT_TRAIN_PATH)
+                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ~~~~~~~~~~^
+        f,
+        ^^
+    ...<6 lines>...
+        storage_options=self.options.get("storage_options", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\itomo\\OneDrive\\Documents\\code\\python\\Projet\\detection_de_fraude\\data\\client_train.csv'
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-07-07 23:39:15 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:39:15 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-07-07 23:39:15 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:39:15 | ERROR    | FraudDetection            | Erreur fatale dans le pipeline : [Errno 2] No such file or directory: 'C:\\Users\\itomo\\OneDrive\\Documents\\code\\python\\Projet\\detection_de_fraude\\data\\client_train.csv'
+Traceback (most recent call last):
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 191, in <module>
+    main()
+    ~~~~^^
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\main.py", line 71, in main
+    client_train, client_test, invoice_train, invoice_test = loader.load_all()
+                                                             ~~~~~~~~~~~~~~~^^
+  File "c:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\preprocessing.py", line 68, in load_all
+    self.client_train = pd.read_csv(CLIENT_TRAIN_PATH)
+                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ~~~~~~~~~~^
+        f,
+        ^^
+    ...<6 lines>...
+        storage_options=self.options.get("storage_options", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\itomo\AppData\Roaming\Python\Python313\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\itomo\\OneDrive\\Documents\\code\\python\\Projet\\detection_de_fraude\\data\\client_train.csv'
+2026-07-07 23:39:33 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-07-07 23:39:35 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-07-07 23:39:35 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:39:35 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-07-07 23:39:35 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ╔════════════════════════════════════════════════════════════════════╗
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ║  PIPELINE DE DÉTECTION DE FRAUDE ÉNERGÉTIQUE — STEG TUNISIE     ║
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ║  Preuve de Concept (PoC) — Projet Académique                    ║
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ╚════════════════════════════════════════════════════════════════════╝
+2026-07-07 23:44:37 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 1/7 : Chargement des données
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:44:37 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-07-07 23:44:37 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:44:57 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-07-07 23:44:57 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-07-07 23:44:57 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-07-07 23:44:57 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-07-07 23:44:57 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-07-07 23:44:57 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-07-07 23:44:58 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-07-07 23:44:58 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 2/7 : Feature Engineering
+2026-07-07 23:44:58 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-07-07 23:44:58 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-07-07 23:44:58 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-07-07 23:44:58 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-07-07 23:45:02 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-07-07 23:45:02 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-07-07 23:45:03 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-07-07 23:45:03 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-07-07 23:45:06 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-07-07 23:45:31 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-07-07 23:45:37 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-07-07 23:46:40 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-07-07 23:46:40 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-07-07 23:46:41 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 3/7 : Analyse du déséquilibre
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ============================================================
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ANALYSE DU DÉSÉQUILIBRE DES CLASSES
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ============================================================
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Classe 0 (légitime) :  127,927 (94.42%)
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Classe 1 (fraude)   :    7,566 (5.58%)
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   scale_pos_weight    : 16.91
+2026-07-07 23:46:41 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 4/7 : Split stratifié train/test
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Train : 108,394 (80%)
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Test  : 27,099 (20%)
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Distribution train : {0: np.int64(102341), 1: np.int64(6053)}
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Distribution test  : {0: np.int64(25586), 1: np.int64(1513)}
+2026-07-07 23:46:41 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 5/7 : Validation croisée stratifiée
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:46:41 | INFO     | FraudDetection            | VALIDATION CROISÉE STRATIFIÉE
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Folds    : 5
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Métriques : ROC-AUC, PR-AUC, F1-Score
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:46:41 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-07-07 23:46:41 | INFO     | FraudDetection            |   Modèle : XGBoost
+2026-07-07 23:46:41 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-07-07 23:47:02 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8456 | PR-AUC: 0.2961 | F1: 0.3205
+2026-07-07 23:47:38 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8487 | PR-AUC: 0.2976 | F1: 0.3331
+2026-07-07 23:48:13 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8451 | PR-AUC: 0.3020 | F1: 0.3192
+2026-07-07 23:48:29 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8464 | PR-AUC: 0.3086 | F1: 0.3115
+2026-07-07 23:48:46 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8346 | PR-AUC: 0.2812 | F1: 0.3154
+2026-07-07 23:48:46 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8441 ± 0.0049 | PR-AUC: 0.2971 ± 0.0091 | F1: 0.3200 ± 0.0073
+2026-07-07 23:48:46 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-07-07 23:48:46 | INFO     | FraudDetection            |   Modèle : LightGBM
+2026-07-07 23:48:46 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-07-07 23:48:54 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8471 | PR-AUC: 0.2909 | F1: 0.3046
+2026-07-07 23:49:02 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8503 | PR-AUC: 0.2998 | F1: 0.3048
+2026-07-07 23:49:10 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8478 | PR-AUC: 0.3053 | F1: 0.3001
+2026-07-07 23:49:18 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8494 | PR-AUC: 0.3144 | F1: 0.3020
+2026-07-07 23:49:29 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8370 | PR-AUC: 0.2901 | F1: 0.2960
+2026-07-07 23:49:29 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8463 ± 0.0048 | PR-AUC: 0.3001 ± 0.0091 | F1: 0.3015 ± 0.0033
+2026-07-07 23:49:29 | INFO     | FraudDetection            | 
+──────────────────────────────────────────────────
+2026-07-07 23:49:29 | INFO     | FraudDetection            |   Modèle : CatBoost
+2026-07-07 23:49:29 | INFO     | FraudDetection            | ──────────────────────────────────────────────────
+2026-07-07 23:49:56 | INFO     | FraudDetection            |     Fold 1/5 — ROC-AUC: 0.8472 | PR-AUC: 0.2945 | F1: 0.2854
+2026-07-07 23:50:19 | INFO     | FraudDetection            |     Fold 2/5 — ROC-AUC: 0.8540 | PR-AUC: 0.3018 | F1: 0.2889
+2026-07-07 23:50:41 | INFO     | FraudDetection            |     Fold 3/5 — ROC-AUC: 0.8488 | PR-AUC: 0.3016 | F1: 0.2869
+2026-07-07 23:51:02 | INFO     | FraudDetection            |     Fold 4/5 — ROC-AUC: 0.8529 | PR-AUC: 0.2998 | F1: 0.2912
+2026-07-07 23:51:24 | INFO     | FraudDetection            |     Fold 5/5 — ROC-AUC: 0.8404 | PR-AUC: 0.2855 | F1: 0.2811
+2026-07-07 23:51:24 | INFO     | FraudDetection            |   ► Moyenne — ROC-AUC: 0.8487 ± 0.0048 | PR-AUC: 0.2966 ± 0.0062 | F1: 0.2867 ± 0.0034
+2026-07-07 23:51:25 | INFO     | FraudDetection            | 
+  Résumé de la validation croisée :
+2026-07-07 23:51:25 | INFO     | FraudDetection            | 
+  Modèle         ROC-AUC          PR-AUC        F1-Score ★
+ XGBoost 0.8441 ± 0.0049 0.2971 ± 0.0091 0.3200 ± 0.0073  
+LightGBM 0.8463 ± 0.0048 0.3001 ± 0.0091 0.3015 ± 0.0033  
+CatBoost 0.8487 ± 0.0048 0.2966 ± 0.0062 0.2867 ± 0.0034  
+2026-07-07 23:51:25 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 6/7 : Entraînement du meilleur modèle
+2026-07-07 23:51:25 | INFO     | FraudDetection            | 
+======================================================================
+2026-07-07 23:51:25 | INFO     | FraudDetection            | MEILLEUR MODÈLE : LightGBM
+2026-07-07 23:51:25 | INFO     | FraudDetection            |   PR-AUC moyen : 0.3001
+2026-07-07 23:51:25 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:52:13 | INFO     | FraudDetection            |   Modèle final entraîné sur l'ensemble du jeu d'entraînement.
+2026-07-07 23:52:13 | INFO     | FraudDetection            | 
+▶▶▶ ÉTAPE 7/7 : Évaluation & Explicabilité
+2026-07-07 23:52:13 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:52:13 | INFO     | FraudDetection            | RAPPORT D'ÉVALUATION — LightGBM
+2026-07-07 23:52:13 | INFO     | FraudDetection            | ======================================================================
+2026-07-07 23:52:13 | INFO     | FraudDetection            |   Accuracy  : 0.8187
+2026-07-07 23:52:13 | INFO     | FraudDetection            |   ROC-AUC   : 0.8548
+2026-07-07 23:52:13 | INFO     | FraudDetection            |   PR-AUC    : 0.3145
+2026-07-07 23:52:13 | INFO     | FraudDetection            |   F1-Score  : 0.3060
+2026-07-07 23:52:13 | INFO     | FraudDetection            | 
+              precision    recall  f1-score   support
+
+    Légitime       0.98      0.82      0.90     25586
+      Fraude       0.19      0.72      0.31      1513
+
+    accuracy                           0.82     27099
+   macro avg       0.59      0.77      0.60     27099
+weighted avg       0.94      0.82      0.86     27099
+
+2026-07-07 23:52:13 | INFO     | FraudDetection            | ----------------------------------------
+2026-07-07 23:52:13 | INFO     | FraudDetection            | Génération des graphiques...
+2026-07-07 23:52:16 | INFO     | FraudDetection            |   📊 Matrice de confusion → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\confusion_matrix.png
+2026-07-07 23:52:17 | INFO     | FraudDetection            |   📊 Courbe ROC-AUC → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\roc_curve.png
+2026-07-07 23:52:18 | INFO     | FraudDetection            |   📊 Courbe PR → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\precision_recall_curve.png
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   📊 Feature importance → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots\feature_importance.png
+2026-07-07 23:52:19 | INFO     | FraudDetection            | ----------------------------------------
+2026-07-07 23:52:19 | INFO     | FraudDetection            | Rapport d'évaluation terminé.
+2026-07-07 23:52:19 | INFO     | FraudDetection            | Graphiques sauvegardés dans : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\plots
+2026-07-07 23:52:19 | INFO     | FraudDetection            | 
+  💾 Modèle sauvegardé → C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs\models\best_model_lightgbm.joblib
+2026-07-07 23:52:19 | INFO     | FraudDetection            | 
+══════════════════════════════════════════════════════════════════════
+2026-07-07 23:52:19 | INFO     | FraudDetection            | RÉSUMÉ FINAL DU PIPELINE
+2026-07-07 23:52:19 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   Meilleur modèle   : LightGBM
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   ROC-AUC (test)    : 0.8548
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   PR-AUC  (test)    : 0.3145
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   F1-Score (test)   : 0.3060
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   Accuracy (test)   : 0.8187
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   Temps total       : 461.7s (7.7 min)
+2026-07-07 23:52:19 | INFO     | FraudDetection            |   Sorties           : C:\Users\itomo\OneDrive\Documents\code\python\Projet\detection_de_fraude\outputs
+2026-07-07 23:52:19 | INFO     | FraudDetection            | ══════════════════════════════════════════════════════════════════════
+2026-07-07 23:52:19 | INFO     | FraudDetection            | Pipeline terminé avec succès ✓
+2026-07-08 00:47:25 | INFO     | FraudDetection            | [*] Chargement du moteur de scoring...
+2026-07-08 00:47:29 | INFO     | FraudDetection            |   [OK] Modele charge : LightGBM
+2026-07-08 00:47:29 | INFO     | FraudDetection            | ======================================================================
+2026-07-08 00:47:29 | INFO     | FraudDetection            | CHARGEMENT DES DONNÉES STEG
+2026-07-08 00:47:29 | INFO     | FraudDetection            | ======================================================================
+2026-07-08 00:47:46 | INFO     | FraudDetection            |   Clients   train : (135493, 6)
+2026-07-08 00:47:46 | INFO     | FraudDetection            |   Clients   test  : (58069, 5)
+2026-07-08 00:47:46 | INFO     | FraudDetection            |   Factures  train : (4476749, 16)
+2026-07-08 00:47:46 | INFO     | FraudDetection            |   Factures  test  : (1939730, 16)
+2026-07-08 00:47:46 | INFO     | FraudDetection            |   Distribution cible (train) :
+2026-07-08 00:47:46 | INFO     | FraudDetection            |     Non-fraude (0) : 94.42%
+2026-07-08 00:47:46 | INFO     | FraudDetection            |     Fraude     (1) : 5.58%
+2026-07-08 00:47:46 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-07-08 00:47:46 | INFO     | FraudDetection            | CONSTRUCTION DES FEATURES
+2026-07-08 00:47:46 | INFO     | FraudDetection            | ------------------------------------------------------------
+2026-07-08 00:47:46 | INFO     | FraudDetection            | Nettoyage des factures...
+2026-07-08 00:47:53 | INFO     | FraudDetection            |   Lignes supprimées (anomalies) : 3,709 / 4,476,749 (0.08%)
+2026-07-08 00:47:53 | INFO     | FraudDetection            | Nettoyage des clients...
+2026-07-08 00:47:53 | INFO     | FraudDetection            |   → Features client (ancienneté, catégorie, région)...
+2026-07-08 00:47:53 | INFO     | FraudDetection            |   → Agrégats de consommation (mean, std, min, max, CV)...
+2026-07-08 00:47:58 | INFO     | FraudDetection            |   → Features temporelles (tendances, saisonnalité)...
+2026-07-08 00:48:23 | INFO     | FraudDetection            |   → Indicateurs de fraude (baisses suspectes, zéros)...
+2026-07-08 00:48:30 | INFO     | FraudDetection            |   → Features compteur (statuts, anomalies, types)...
+2026-07-08 00:49:48 | INFO     | FraudDetection            |   Matrice finale : 135493 clients × 45 features
+2026-07-08 00:49:48 | INFO     | FraudDetection            |   Features : ['disrict', 'client_catg', 'region', 'client_anciennete_jours', 'creation_mois', 'creation_annee', 'saison_creation_automne', 'saison_creation_ete', 'saison_creation_hiver', 'saison_creation_printemps']... (+ 35 autres)
+2026-07-08 00:49:50 | INFO     | FraudDetection            |   [OK] 135493 clients charges, 45 features
+2026-07-08 00:49:50 | INFO     | FraudDetection            |   [OK] Test set : 27099 clients pour les metriques

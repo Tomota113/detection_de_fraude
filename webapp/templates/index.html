@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEG Fraud Detection — Système de Détection</title>
+
+    <!-- Google Fonts — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Chart.js depuis CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Feuille de style principale -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- ===================================================================
+         SIDEBAR — Navigation principale fixe à gauche
+         =================================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <!-- En-tête du sidebar -->
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">STEG Fraud Detection</h1>
+            <p class="sidebar-subtitle">Système de Détection</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" id="nav-dashboard" data-section="section-dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-scoring" data-section="section-scoring">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Scoring</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-exploration" data-section="section-exploration">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Exploration</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-performance" data-section="section-performance">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">Performance</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-suspects" data-section="section-suspects">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Suspects</span>
+            </a>
+        </nav>
+
+        <!-- Pied du sidebar -->
+        <div class="sidebar-footer">
+            <p class="sidebar-version">v1.0.0</p>
+        </div>
+    </aside>
+
+    <!-- ===================================================================
+         CONTENU PRINCIPAL — Zone à droite du sidebar
+         =================================================================== -->
+    <main class="main-content" id="main-content">
+
+        <!-- =============================================================
+             SECTION 1 — Dashboard
+             ============================================================= -->
+        <div class="section active fade-in" id="section-dashboard">
+            <h2 class="page-title">Dashboard</h2>
+
+            <!-- Ligne de 4 KPI -->
+            <div class="grid-4">
+                <div class="card kpi-card" id="kpi-clients">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">Clients Total</div>
+                </div>
+                <div class="card kpi-card" id="kpi-invoices">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">Factures Analysées</div>
+                </div>
+                <div class="card kpi-card" id="kpi-fraudsters">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">Fraudeurs Détectés</div>
+                </div>
+                <div class="card kpi-card" id="kpi-fraud-rate">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">Taux de Fraude</div>
+                </div>
+            </div>
+
+            <!-- KPI Modèle -->
+            <div class="grid-3" id="model-kpi-cards" style="margin-top: 24px;">
+                <!-- Rempli dynamiquement par dashboard.js -->
+            </div>
+
+            <!-- Graphiques Dashboard -->
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="chart-container">
+                    <h3 class="chart-title">Fraude par Région</h3>
+                    <div class="chart-wrapper"><canvas id="chart-fraud-region"></canvas></div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Évolution Temporelle</h3>
+                    <div class="chart-wrapper"><canvas id="chart-timeline"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================================
+             SECTION 2 — Scoring
+             ============================================================= -->
+        <div class="section" id="section-scoring">
+            <h2 class="page-title">Scoring Client</h2>
+
+            <!-- Barre de recherche -->
+            <div class="search-bar">
+                <input
+                    type="text"
+                    id="input-client-id"
+                    class="search-input"
+                    placeholder="Entrez l'identifiant client (ex: 12345)…"
+                    autocomplete="off"
+                >
+                <button class="btn btn-primary" id="btn-score">
+                    🔍 Analyser
+                </button>
+            </div>
+
+            <!-- Résultat du scoring (caché par défaut) -->
+            <div id="scoring-result" class="hidden">
+
+                <!-- Jauge + Badge de risque -->
+                <div class="scoring-header">
+                    <div id="gauge-container" class="gauge-container">
+                        <div class="gauge" id="gauge">
+                            <span class="gauge-value" id="gauge-value">0</span>
+                            <span class="gauge-unit">%</span>
+                        </div>
+                        <span class="badge" id="risk-badge">—</span>
+                    </div>
+                </div>
+
+                <!-- Profil client -->
+                <div class="card client-profile" id="client-profile">
+                    <h3 class="card-title">Profil Client</h3>
+                    <div class="profile-grid" id="profile-details">
+                        <!-- Rempli dynamiquement par JS -->
+                    </div>
+                </div>
+
+                <!-- Facteurs + Historique -->
+                <div class="grid-2" style="margin-top: 24px;">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Facteurs Principaux</h3>
+                        <canvas id="chart-factors"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="chart-title">Historique de Consommation</h3>
+                        <canvas id="chart-history"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================================
+             SECTION 3 — Exploration
+             ============================================================= -->
+        <div class="section" id="section-exploration">
+            <h2 class="page-title">Exploration des Données</h2>
+
+            <!-- Sélecteur de feature -->
+            <div class="filters-row">
+                <label class="filter-label" for="select-feature">Variable :</label>
+                <select id="select-feature" class="select-input">
+                    <option value="">— Sélectionner une variable —</option>
+                </select>
+            </div>
+
+            <!-- Statistiques de la feature -->
+            <div class="card" id="feature-stats" style="margin-top: 24px;">
+                <!-- Rempli dynamiquement par exploration.js -->
+            </div>
+
+            <!-- Histogramme + Boxplot côte à côte -->
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="chart-container">
+                    <h3 class="chart-title">Distribution (Histogramme)</h3>
+                    <div class="chart-wrapper"><canvas id="chart-histogram"></canvas></div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Répartition (Boxplot)</h3>
+                    <div class="chart-wrapper"><canvas id="chart-boxplot"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Matrice de corrélation -->
+            <div class="chart-container" style="margin-top: 24px;">
+                <h3 class="chart-title">Corrélations avec la Fraude</h3>
+                <div class="chart-wrapper" style="height: 400px;"><canvas id="chart-correlation"></canvas></div>
+            </div>
+        </div>
+
+        <!-- =============================================================
+             SECTION 4 — Performance du Modèle
+             ============================================================= -->
+        <div class="section" id="section-performance">
+            <h2 class="page-title">Performance du Modèle</h2>
+
+            <!-- 4 KPI de performance -->
+            <div class="grid-4">
+                <div class="card kpi-card" id="kpi-roc">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">AUC-ROC</div>
+                </div>
+                <div class="card kpi-card" id="kpi-pr">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">AUC-PR</div>
+                </div>
+                <div class="card kpi-card" id="kpi-f1">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">F1-Score</div>
+                </div>
+                <div class="card kpi-card" id="kpi-accuracy">
+                    <div class="kpi-value" data-value="0">—</div>
+                    <div class="kpi-label">Accuracy</div>
+                </div>
+            </div>
+
+            <!-- Slider de seuil -->
+            <div class="card threshold-card" style="margin-top: 24px;">
+                <div class="threshold-row">
+                    <label class="filter-label" for="slider-threshold">Seuil de décision :</label>
+                    <input
+                        type="range"
+                        id="slider-threshold"
+                        class="slider"
+                        min="0"
+                        max="100"
+                        value="50"
+                    >
+                    <span class="threshold-display" id="threshold-value">50%</span>
+                </div>
+            </div>
+
+            <!-- Courbes ROC + PR -->
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="chart-container">
+                    <h3 class="chart-title">Courbe ROC</h3>
+                    <div class="chart-wrapper"><canvas id="chart-roc"></canvas></div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Courbe Précision-Rappel</h3>
+                    <div class="chart-wrapper"><canvas id="chart-pr"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Matrice de confusion -->
+            <div class="card" style="margin-top: 24px;">
+                <h3 class="card-title">Matrice de Confusion</h3>
+                <div class="cm-grid" id="confusion-matrix">
+                    <div class="cm-cell cm-tp">
+                        <div class="cm-label">Vrais Positifs</div>
+                        <div class="cm-value" id="cm-tp-value">—</div>
+                    </div>
+                    <div class="cm-cell cm-fp">
+                        <div class="cm-label">Faux Positifs</div>
+                        <div class="cm-value" id="cm-fp-value">—</div>
+                    </div>
+                    <div class="cm-cell cm-fn">
+                        <div class="cm-label">Faux Négatifs</div>
+                        <div class="cm-value" id="cm-fn-value">—</div>
+                    </div>
+                    <div class="cm-cell cm-tn">
+                        <div class="cm-label">Vrais Négatifs</div>
+                        <div class="cm-value" id="cm-tn-value">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Radar + Feature Importance -->
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="chart-container">
+                    <h3 class="chart-title">Métriques Radar</h3>
+                    <div class="chart-wrapper"><canvas id="chart-radar"></canvas></div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Importance des Variables</h3>
+                    <div class="chart-wrapper" style="height: 450px;"><canvas id="chart-feature-importance"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =============================================================
+             SECTION 5 — Suspects
+             ============================================================= -->
+        <div class="section" id="section-suspects">
+            <h2 class="page-title">Liste des Suspects</h2>
+
+            <!-- Filtres -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label" for="slider-suspect-threshold">Seuil minimum :</label>
+                    <input
+                        type="range"
+                        id="slider-suspect-threshold"
+                        class="slider"
+                        min="0"
+                        max="100"
+                        value="50"
+                    >
+                    <span class="threshold-display" id="suspect-threshold-value">50%</span>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="select-region">Région :</label>
+                    <select id="select-region" class="select-input">
+                        <option value="">Toutes les régions</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-export" id="btn-export-csv">
+                    ⬇ Exporter CSV
+                </button>
+            </div>
+
+            <!-- Barre de statistiques -->
+            <div class="stats-bar">
+                <span id="suspect-stats">Chargement des données…</span>
+            </div>
+
+            <!-- Tableau des suspects -->
+            <div class="table-wrapper">
+                <table class="table" id="table-suspects">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Client</th>
+                            <th>Probabilité</th>
+                            <th>Région</th>
+                            <th>Catégorie</th>
+                            <th>Facteur</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-suspects">
+                        <!-- Rempli dynamiquement par JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Boutons de pagination générés par JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===================================================================
+         SCRIPTS — Chargement des modules JS
+         =================================================================== -->
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/scoring.js"></script>
+    <script src="/static/js/exploration.js"></script>
+    <script src="/static/js/performance.js"></script>
+    <script src="/static/js/suspects.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,1490 @@
+/* =======================================================================
+   STEG Fraud Detection — Feuille de style principale
+   Design premium dark-mode avec palette sombre et accents bleus
+   ======================================================================= */
+
+/* -----------------------------------------------------------------------
+   1. Variables CSS — Palette et tokens de design
+   ----------------------------------------------------------------------- */
+:root {
+    /* Couleurs de fond */
+    --bg:          #0F172A;
+    --card:        #1E293B;
+    --card-hover:  #273548;
+
+    /* Couleurs d'accent */
+    --blue:        #2563EB;
+    --blue-light:  #93C5FD;
+    --red:         #DC2626;
+    --red-light:   #FCA5A5;
+    --green:       #059669;
+    --green-light: #6EE7B7;
+    --orange:      #D97706;
+    --purple:      #7C3AED;
+
+    /* Texte */
+    --text:           #FFFFFF;
+    --text-secondary: #94A3B8;
+
+    /* Bordures et ombres */
+    --border: #334155;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+
+    /* Dimensions du sidebar */
+    --sidebar-width: 260px;
+}
+
+/* -----------------------------------------------------------------------
+   2. Reset global et typographie de base
+   ----------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* -----------------------------------------------------------------------
+   3. Scrollbar personnalisée
+   ----------------------------------------------------------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* -----------------------------------------------------------------------
+   4. Sidebar — Navigation fixe à gauche
+   ----------------------------------------------------------------------- */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* Dégradé subtil en superposition sur le sidebar */
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(37, 99, 235, 0.06) 0%,
+        rgba(15, 23, 42, 0.00) 40%,
+        rgba(124, 58, 237, 0.04) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* En-tête du sidebar */
+.sidebar-header {
+    position: relative;
+    z-index: 1;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.sidebar-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Navigation du sidebar */
+.sidebar-nav {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    padding: 16px 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.04);
+    border-left-color: var(--blue);
+}
+
+.nav-item.active {
+    color: var(--text);
+    background: rgba(37, 99, 235, 0.08);
+    border-left-color: var(--blue);
+}
+
+.nav-icon {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.nav-label {
+    white-space: nowrap;
+}
+
+/* Pied du sidebar */
+.sidebar-footer {
+    position: relative;
+    z-index: 1;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+}
+
+.sidebar-version {
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* -----------------------------------------------------------------------
+   5. Contenu principal
+   ----------------------------------------------------------------------- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 32px;
+    min-height: 100vh;
+}
+
+/* -----------------------------------------------------------------------
+   6. Titres de page
+   ----------------------------------------------------------------------- */
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+/* -----------------------------------------------------------------------
+   7. Sections — Visibilité (SPA)
+   ----------------------------------------------------------------------- */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+/* -----------------------------------------------------------------------
+   8. Cartes génériques
+   ----------------------------------------------------------------------- */
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+/* -----------------------------------------------------------------------
+   9. Cartes KPI
+   ----------------------------------------------------------------------- */
+.kpi-card {
+    text-align: center;
+}
+
+.kpi-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1.2;
+}
+
+.kpi-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* -----------------------------------------------------------------------
+   10. Grilles CSS — Layouts responsifs
+   ----------------------------------------------------------------------- */
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+/* Points de rupture responsifs */
+@media (max-width: 1200px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-4,
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+}
+
+/* -----------------------------------------------------------------------
+   11. Conteneurs de graphiques
+   ----------------------------------------------------------------------- */
+.chart-container {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+}
+
+.chart-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+
+/* -----------------------------------------------------------------------
+   12. Barre de recherche (Scoring)
+   ----------------------------------------------------------------------- */
+.search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.search-input {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.search-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* -----------------------------------------------------------------------
+   13. Jauge circulaire (Scoring)
+   ----------------------------------------------------------------------- */
+.scoring-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.gauge {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: conic-gradient(
+        var(--blue) 0%,
+        var(--blue) 0%,
+        var(--border) 0%,
+        var(--border) 100%
+    );
+    box-shadow: 0 0 40px rgba(37, 99, 235, 0.15);
+}
+
+/* Cercle intérieur pour effet d'anneau */
+.gauge::before {
+    content: '';
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--bg);
+}
+
+.gauge-value {
+    position: relative;
+    z-index: 1;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+}
+
+.gauge-unit {
+    position: relative;
+    z-index: 1;
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* -----------------------------------------------------------------------
+   14. Badges de risque
+   ----------------------------------------------------------------------- */
+.badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.badge-low {
+    background: rgba(5, 150, 105, 0.2);
+    color: var(--green-light);
+}
+
+.badge-medium {
+    background: rgba(217, 119, 6, 0.2);
+    color: var(--orange);
+}
+
+.badge-high {
+    background: rgba(220, 38, 38, 0.2);
+    color: var(--red-light);
+}
+
+.badge-critical {
+    background: #7f1d1d;
+    color: var(--red-light);
+}
+
+/* -----------------------------------------------------------------------
+   15. Profil client (Scoring)
+   ----------------------------------------------------------------------- */
+.client-profile {
+    margin-top: 24px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.profile-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-item-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+}
+
+.profile-item-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   16. Barres de facteurs (Scoring)
+   ----------------------------------------------------------------------- */
+.factor-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.factor-name {
+    width: 180px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.factor-track {
+    flex: 1;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.factor-fill {
+    height: 24px;
+    border-radius: 6px;
+    background: var(--blue);
+    transition: width 0.6s ease;
+}
+
+.factor-value {
+    font-size: 13px;
+    color: var(--text-secondary);
+    min-width: 45px;
+}
+
+/* -----------------------------------------------------------------------
+   17. Filtres
+   ----------------------------------------------------------------------- */
+.filters-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.select-input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    min-width: 200px;
+}
+
+.select-input:focus {
+    border-color: var(--blue);
+}
+
+/* Options déroulantes */
+.select-input option {
+    background: var(--card);
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   18. Slider (Seuil)
+   ----------------------------------------------------------------------- */
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    max-width: 300px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.threshold-card {
+    padding: 20px 24px;
+}
+
+.threshold-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.threshold-display {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--blue);
+    min-width: 50px;
+}
+
+/* -----------------------------------------------------------------------
+   19. Boutons
+   ----------------------------------------------------------------------- */
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: var(--text);
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+}
+
+.btn-export {
+    background: var(--green);
+    color: var(--text);
+}
+
+.btn-export:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+}
+
+.btn-action {
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--blue-light);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.btn-action:hover {
+    background: rgba(37, 99, 235, 0.3);
+}
+
+/* -----------------------------------------------------------------------
+   20. Barre de statistiques
+   ----------------------------------------------------------------------- */
+.stats-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* -----------------------------------------------------------------------
+   21. Tableau de données
+   ----------------------------------------------------------------------- */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead {
+    background: var(--card);
+}
+
+.table th {
+    padding: 14px 16px;
+    text-align: left;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.table tbody tr:hover {
+    background: var(--card-hover);
+}
+
+.table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Barre de probabilité inline dans le tableau */
+.prob-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prob-bar {
+    width: 80px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.prob-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+/* Couleurs de la barre selon la valeur */
+.prob-bar-fill.prob-low {
+    background: var(--green);
+}
+
+.prob-bar-fill.prob-medium {
+    background: var(--orange);
+}
+
+.prob-bar-fill.prob-high {
+    background: var(--red);
+}
+
+.prob-bar-fill.prob-critical {
+    background: #EF4444;
+}
+
+.prob-text {
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 42px;
+}
+
+/* -----------------------------------------------------------------------
+   22. Matrice de confusion
+   ----------------------------------------------------------------------- */
+.cm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    max-width: 400px;
+}
+
+.cm-cell {
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.cm-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cm-value {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.cm-tp {
+    background: rgba(5, 150, 105, 0.2);
+}
+
+.cm-tp .cm-value {
+    color: var(--green-light);
+}
+
+.cm-tn {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+.cm-tn .cm-value {
+    color: var(--blue-light);
+}
+
+.cm-fp {
+    background: rgba(217, 119, 6, 0.2);
+}
+
+.cm-fp .cm-value {
+    color: var(--orange);
+}
+
+.cm-fn {
+    background: rgba(220, 38, 38, 0.2);
+}
+
+.cm-fn .cm-value {
+    color: var(--red-light);
+}
+
+/* -----------------------------------------------------------------------
+   23. Pagination
+   ----------------------------------------------------------------------- */
+.pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.page-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    border-color: var(--blue);
+    background: var(--card-hover);
+}
+
+.page-btn.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--text);
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* -----------------------------------------------------------------------
+   24. Animations
+   ----------------------------------------------------------------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Animation de compteur pour les KPI */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.kpi-value.animate {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Animation de pulsation subtile pour les alertes */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* -----------------------------------------------------------------------
+   25. Utilitaires
+   ----------------------------------------------------------------------- */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.mt-24 {
+    margin-top: 24px;
+}
+
+.mb-24 {
+    margin-bottom: 24px;
+}
+
+/* -----------------------------------------------------------------------
+   26. État de chargement (spinner)
+   ----------------------------------------------------------------------- */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* -----------------------------------------------------------------------
+   27. Tooltip
+   ----------------------------------------------------------------------- */
+.tooltip {
+    position: relative;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+
+/* -----------------------------------------------------------------------
+   28. Historique de consommation (conteneur spécifique)
+   ----------------------------------------------------------------------- */
+.history-container {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+}
+
+/* -----------------------------------------------------------------------
+   29. Message vide / erreur
+   ----------------------------------------------------------------------- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 32px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    max-width: 400px;
+}
+
+.error-message {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: var(--red-light);
+    font-size: 14px;
+}
+
+/* -----------------------------------------------------------------------
+   30. Sélection de texte
+   ----------------------------------------------------------------------- */
+::selection {
+    background: rgba(37, 99, 235, 0.3);
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   31. Chart Wrapper — Conteneur pour Chart.js
+   ----------------------------------------------------------------------- */
+.chart-wrapper {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* -----------------------------------------------------------------------
+   32. Scoring Grid — Layout des résultats de scoring
+   ----------------------------------------------------------------------- */
+.scoring-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+@media (max-width: 1200px) {
+    .scoring-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.scoring-main-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.gauge-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Gauge animée avec conic-gradient */
+.gauge {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--color, var(--blue)) 0deg,
+        var(--color, var(--blue)) calc(var(--proba, 0) * 3.6deg),
+        var(--border) calc(var(--proba, 0) * 3.6deg),
+        var(--border) 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.8s ease;
+}
+
+.gauge-inner {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.gauge-value {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.gauge-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.risk-badge {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+}
+
+.verdict-box {
+    padding: 16px 24px;
+    border-radius: 12px;
+    border-left: 4px solid var(--blue);
+    background: rgba(37, 99, 235, 0.08);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    width: 100%;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   33. Profil Client
+   ----------------------------------------------------------------------- */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.profile-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   34. Factor Bars
+   ----------------------------------------------------------------------- */
+.factor-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.factor-name {
+    width: 180px;
+    min-width: 180px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.factor-track {
+    flex: 1;
+    height: 22px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.factor-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+    transition: width 0.6s ease;
+}
+
+.factor-value {
+    min-width: 60px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+/* -----------------------------------------------------------------------
+   35. Stats Grid (Exploration)
+   ----------------------------------------------------------------------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* -----------------------------------------------------------------------
+   36. Suggestions Box (Autocomplete)
+   ----------------------------------------------------------------------- */
+.suggestions-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0 0 12px 12px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.suggestion-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+}
+
+.suggestion-item:hover {
+    background: var(--card-hover);
+    color: var(--text);
+}
+
+/* -----------------------------------------------------------------------
+   37. Error & Loading Cards
+   ----------------------------------------------------------------------- */
+.error-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    border-radius: var(--radius);
+}
+
+.error-icon {
+    font-size: 32px;
+}
+
+.error-text {
+    font-size: 15px;
+    color: var(--red-light);
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* -----------------------------------------------------------------------
+   38. Probability Bars (Suspects Table)
+   ----------------------------------------------------------------------- */
+.proba-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.proba-bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 80px;
+}
+
+.proba-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.proba-text {
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 50px;
+    text-align: right;
+}
+
+.client-link {
+    color: var(--blue-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.client-link:hover {
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+.factor-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--blue-light);
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+/* -----------------------------------------------------------------------
+   39. KPI Accent Variants
+   ----------------------------------------------------------------------- */
+.kpi-accent-green .kpi-value {
+    color: var(--green);
+}
+
+.kpi-accent-purple .kpi-value {
+    color: var(--purple);
+}
+
+.kpi-accent-orange .kpi-value {
+    color: var(--orange);
+}
+
+.kpi-accent-red .kpi-value {
+    color: var(--red);
+}
+
+/* -----------------------------------------------------------------------
+   40. Confusion Matrix Metrics
+   ----------------------------------------------------------------------- */
+.cm-metrics {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.cm-metrics b {
+    color: var(--text);
+}
+
+.cm-count {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.cm-pct {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* -----------------------------------------------------------------------
+   41. Page Ellipsis (Pagination)
+   ----------------------------------------------------------------------- */
+.page-ellipsis {
+    color: var(--text-secondary);
+    padding: 8px 4px;
+}
+
+.page-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
